@@ -19,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("categories")
 @CrossOrigin
+
 public class CategoriesController {
     private CategoryDao categoryDao;
     private ProductDao productDao;
@@ -97,6 +98,7 @@ public class CategoriesController {
         }
         catch(Exception ex)
         {
+            ex.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }

@@ -68,8 +68,8 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
         try (Connection con = getConnection())
         {
             PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-            ps.setString(2, category.getName());
-            ps.setString(3, category.getDescription());
+            ps.setString(1, category.getName());
+            ps.setString(2, category.getDescription());
 
             int rowsAffected = ps.executeUpdate();
 
@@ -103,6 +103,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, category.getName());
             ps.setString(2, category.getDescription());
+            ps.setInt(3, categoryId);
             ps.executeUpdate();
         }
         catch (SQLException e)
