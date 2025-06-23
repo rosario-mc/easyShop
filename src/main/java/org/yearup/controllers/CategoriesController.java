@@ -23,17 +23,13 @@ public class CategoriesController {
     private CategoryDao categoryDao;
     private ProductDao productDao;
 
-
-    // create an Autowired controller to inject the categoryDao and ProductDao
-
     public CategoriesController(CategoryDao categoryDao, ProductDao productDao) {
         this.categoryDao = categoryDao;
         this.productDao = productDao;
     }
 
-    // add the appropriate annotation for a get action
-    // find and return all categories
-    @GetMapping("categories")
+    @GetMapping("")
+    @PreAuthorize("permitAll()")
     public List<Category> getAll() {
         try {
             return categoryDao.getAllCategories();
@@ -44,9 +40,8 @@ public class CategoriesController {
         }
     }
 
-    // add the appropriate annotation for a get action
-    // get the category by id
     @GetMapping("{id}")
+    @PreAuthorize("permitAll()")
     public Category getById(@PathVariable int id) {
         try {
             var category = categoryDao.getById(id);
@@ -60,33 +55,68 @@ public class CategoriesController {
         }
     }
 
-    // the url to return all products in category 1 would look like this
-    // https://localhost:8080/categories/1/products
-    @GetMapping("categories/{categoryId}/products")
+    @GetMapping("{categoryId}/products")
+    @PreAuthorize("permitAll()")
     public List<Product> getProductsById(@PathVariable int categoryId)
-    // get a list of product by categoryId
     {
+        try
+        {
+            var product = productDao.listByCategoryId(categoryId);
 
-        return null;
+            if(product == null)
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+            return product;
+        }
+        catch(Exception ex)
+        {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+        }
     }
 
-    // add annotation to call this method for a POST action
-    // add annotation to ensure that only an ADMIN can call this function
+    @PostMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Category addCategory(@RequestBody Category category) {
-        // insert the category
-        return null;
+        try
+        {
+            return categoryDao.create(category);
+        }
+        catch(Exception ex)
+        {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+        }
     }
 
-    // add annotation to call this method for a PUT (update) action - the url path must include the categoryId
-    // add annotation to ensure that only an ADMIN can call this function
-    public void updateCategory(@PathVariable int id, @RequestBody Category category) {
-        // update the category by id
+    @PutMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void updateCategory(@PathVariable int id, @RequestBody Category category)
+    {
+        try
+        {
+            categoryDao.update(id, category);
+        }
+        catch(Exception ex)
+        {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+        }
     }
 
+    @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void deleteCategory(@PathVariable int id)
+    {
+        try
+        {
+            var product = categoryDao.getById(id);
 
-    // add annotation to call this method for a DELETE action - the url path must include the categoryId
-    // add annotation to ensure that only an ADMIN can call this function
-    public void deleteCategory(@PathVariable int id) {
-        // delete the category by id
+            if(product == null)
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+            categoryDao.delete(id);
+        }
+        catch(Exception ex)
+        {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+        }
     }
 }
