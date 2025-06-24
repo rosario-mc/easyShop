@@ -35,41 +35,35 @@ public class CategoriesController {
     public List<Category> getAll() {
         try {
             return categoryDao.getAllCategories();
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
 
+    //Ryan & Paulo helped
     @GetMapping("{id}")
     @PreAuthorize("permitAll()")
-    //Ryan & Paulo helped
     public ResponseEntity<Category> getById(@PathVariable int id) {
 
-            var category = categoryDao.getById(id);
+        var category = categoryDao.getById(id);
 
-            if (category == null)
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        if (category == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
-            return ResponseEntity.ok(category);
+        return ResponseEntity.ok(category);
     }
 
     @GetMapping("{categoryId}/products")
     @PreAuthorize("permitAll()")
-    public List<Product> getProductsById(@PathVariable int categoryId)
-    {
-        try
-        {
+    public List<Product> getProductsById(@PathVariable int categoryId) {
+        try {
             var product = productDao.listByCategoryId(categoryId);
 
-            if(product == null )
+            if (product == null)
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
             return product;
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
@@ -78,19 +72,15 @@ public class CategoriesController {
     @PostMapping("")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Category> addCategory(@RequestBody Category category) {
-                return ResponseEntity.status(HttpStatus.CREATED).body(categoryDao.create(category));
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryDao.create(category));
     }
 
     @PutMapping("{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void updateCategory(@PathVariable int id, @RequestBody Category category)
-    {
-        try
-        {
+    public void updateCategory(@PathVariable int id, @RequestBody Category category) {
+        try {
             categoryDao.update(id, category);
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
@@ -100,9 +90,7 @@ public class CategoriesController {
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCategory(@PathVariable int id){
+    public void deleteCategory(@PathVariable int id) {
         categoryDao.delete(id);
     }
-
-
 }
