@@ -1,6 +1,7 @@
 package org.yearup.controllers;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -43,17 +44,15 @@ public class CategoriesController {
 
     @GetMapping("{id}")
     @PreAuthorize("permitAll()")
-    public Category getById(@PathVariable int id) {
-        try {
+    //Ryan & Paulo helped
+    public ResponseEntity<Category> getById(@PathVariable int id) {
+
             var category = categoryDao.getById(id);
 
             if (category == null)
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
-            return category;
-        } catch (Exception ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
-        }
+            return ResponseEntity.ok(category);
     }
 
     @GetMapping("{categoryId}/products")
@@ -64,7 +63,7 @@ public class CategoriesController {
         {
             var product = productDao.listByCategoryId(categoryId);
 
-            if(product == null)
+            if(product == null )
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
             return product;
@@ -75,17 +74,11 @@ public class CategoriesController {
         }
     }
 
+    //Paulo helped
     @PostMapping("")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Category addCategory(@RequestBody Category category) {
-        try
-        {
-            return categoryDao.create(category);
-        }
-        catch(Exception ex)
-        {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
-        }
+    public ResponseEntity<Category> addCategory(@RequestBody Category category) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(categoryDao.create(category));
     }
 
     @PutMapping("{id}")
@@ -103,22 +96,13 @@ public class CategoriesController {
         }
     }
 
+    //Ryan and Paulo helped
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void deleteCategory(@PathVariable int id)
-    {
-        try
-        {
-            var product = categoryDao.getById(id);
-
-            if(product == null)
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-
-            categoryDao.delete(id);
-        }
-        catch(Exception ex)
-        {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCategory(@PathVariable int id){
+        categoryDao.delete(id);
     }
+
+
 }
