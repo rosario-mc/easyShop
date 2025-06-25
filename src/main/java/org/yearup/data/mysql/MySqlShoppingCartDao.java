@@ -23,12 +23,13 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     }
 
     @Override
+    //Maaike helped with Image
     public ShoppingCart getCart(int userId)
     {
         ShoppingCart cart = new ShoppingCart();
 
         String sql = """
-            SELECT sc.product_id, sc.quantity, p.name, p.price
+            SELECT sc.product_id, sc.quantity, p.name, p.price, p.image_url
             FROM shopping_cart sc
             JOIN products p ON sc.product_id = p.product_id
             WHERE sc.user_id = ?
@@ -46,11 +47,13 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
                 String name = rs.getString("name");
                 BigDecimal price = rs.getBigDecimal("price");
                 int quantity = rs.getInt("quantity");
+                String image_url = rs.getString("image_url");
 
                 Product product = new Product();
                 product.setProductId(productId);
                 product.setName(name);
                 product.setPrice(price);
+                product.setImageUrl(image_url);
 
                 ShoppingCartItem item = new ShoppingCartItem(product, quantity);
 
