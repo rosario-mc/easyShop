@@ -107,4 +107,21 @@ button:hover,
 
 Special thanks to:
 - My instructor Maaike and peers for feedback, guidance, & patience. I am forever grateful for all of you!
+
+<details>
+  <summary>Click to see where my classmates & Maaike helped</summary>
+
+![Help](images/help.png)
+
+</details>
+
 - **ChatGPT by OpenAI** for helping with code refactoring, debugging, and content writing support in the front end.
+
+<details>
+  <summary>Click to see where ChatGPT helped</summary>
+
+![GIF](images/frontEndAdditions/mainCSS.gif)
+
+![GIF](images/frontEndAdditions/shoppingcart-serviceJS.gif)
+
+</details>
