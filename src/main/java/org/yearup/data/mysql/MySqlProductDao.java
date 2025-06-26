@@ -27,7 +27,7 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
                 "WHERE (? = -1 OR category_id = ?) " +
                 "AND (? = -1 OR price >= ?) " +
                 "AND (? = -1 OR price <= ?) " +
-                "AND (? = '' OR LOWER(color) = LOWER(?))";  // case-insensitive color
+                "AND (? = '' OR LOWER(color) = LOWER(?))";
 
         categoryId = categoryId == null ? -1 : categoryId;
         minPrice = minPrice == null ? new BigDecimal("-1") : minPrice;
