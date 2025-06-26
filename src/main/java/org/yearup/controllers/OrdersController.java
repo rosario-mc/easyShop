@@ -34,6 +34,8 @@ public class OrdersController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+
+    //Wilmer helped with moral support. I almost gave up here.
     public Order checkout(Principal principal)
     {
         String userName = principal.getName();
